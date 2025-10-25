@@ -27,7 +27,7 @@ class UserController extends Controller
 
     public function getAllUser(){
         $user = User::all();
-        return response()->json($user);
+        return response()->json($user->makeHidden(['password']));
     }
 
     public function update(Request $request, $id)

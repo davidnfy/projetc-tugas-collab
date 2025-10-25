@@ -30,7 +30,7 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Login berhasil',
             'token' => $token,
-            'user' => $user
+            'user' => $user->makeHidden(['password'])
         ]);
     }
 
