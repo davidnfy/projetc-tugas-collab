@@ -17,13 +17,11 @@ class BaseTodoController extends Controller
     public function index(Request $request){
     $query = $this->model::where('user_id', Auth::id());
 
-    // Filter berdasarkan category_id jika ada
     $categoryId = $request->category_id ?? null;
     if ($categoryId) {
         $query->where('category_id', $categoryId);
     }
 
-    // Filter berdasarkan status
     if ($request->has('filter')) {
         switch ($request->filter) {
             case 'pending':
