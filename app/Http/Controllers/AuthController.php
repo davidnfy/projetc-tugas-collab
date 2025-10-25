@@ -23,10 +23,8 @@ class AuthController extends Controller
             ], 401);
         }
 
-        // Hapus token lama (optional)
         $user->tokens()->delete();
 
-        // Buat token baru
         $token = $user->createToken('api_token')->plainTextToken;
 
         return response()->json([
@@ -41,5 +39,16 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json(['message' => 'Logout berhasil']);
+    }
+
+    // 👇 Tambahkan dua fungsi ini
+    public function showLogin()
+    {
+        return view('auth.login');
+    }
+
+    public function showRegister()
+    {
+        return view('auth.register');
     }
 }
