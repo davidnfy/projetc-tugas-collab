@@ -1,20 +1,26 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
+use Laravel\Socialite\Facades\Socialite;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
-Route::get('/', function () {
-    return redirect('/login');
+Route::get('/auth/google', function () {
+    return Socialite::driver('google')->redirect();
 });
 
-// Route Auth
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register', [AuthController::class, 'register']);
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/auth/google/callback', function () {
+    $googleUser = Socialite::driver('google')->user();
 
-// Nanti setelah login, user masuk ke dashboard Todo List
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware('auth');
+    $user = User::updateOrCreate(
+        ['email' => $googleUser->getEmail()],
+        [
+            'name' => $googleUser->getName(),
+            'google_id' => $googleUser->getId(),
+            'avatar' => $googleUser->getAvatar(),
+        ]
+    );
+
+    Auth::login($user);
+    return redirect('/dashboard');
+});

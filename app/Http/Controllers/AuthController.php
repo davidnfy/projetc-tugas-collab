@@ -41,7 +41,6 @@ class AuthController extends Controller
         return response()->json(['message' => 'Logout berhasil']);
     }
 
-    // 👇 Tambahkan dua fungsi ini
     public function showLogin()
     {
         return view('auth.login');
