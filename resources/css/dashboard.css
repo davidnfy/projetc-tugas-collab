@@ -1,0 +1,195 @@
+/* Layout utama */
+.dashboard-body {
+    background-color: #f3f4f6;
+    color: #222;
+    font-family: "Segoe UI", sans-serif;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.todo-dashboard {
+    display: flex;
+    height: 100%;
+}
+
+/* Sidebar */
+.sidebar-custom {
+    width: 260px;
+    background-color: #f9fafb;
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.sidebar-custom .brand h3 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #6B46C1;
+    font-weight: bold;
+}
+
+.sidebar-custom .menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.sidebar-custom .menu li {
+    margin-bottom: 8px;
+}
+
+.sidebar-custom .menu a {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 6px;
+    color: #333;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.sidebar-custom .menu a:hover {
+    background-color: #ede9fe;
+}
+
+.sidebar-custom .menu a.active {
+    background-color: #d8b4fe;
+    color: #3b0764;
+    font-weight: bold;
+}
+
+.sidebar-custom .bottom-menu {
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+}
+
+.sidebar-custom .logout {
+    text-decoration: none;
+    color: #d32f2f;
+    font-weight: 500;
+    display: block;
+    padding: 8px;
+    border-radius: 6px;
+}
+
+.sidebar-custom .logout:hover {
+    background-color: #fdecea;
+}
+
+/* Main Area */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 40px 50px;
+    overflow-y: auto;
+}
+
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.main-header h2 {
+    font-size: 28px;
+    margin: 0;
+    color: #4c1d95;
+}
+
+.main-header p {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Input Area */
+.todo-input {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.todo-input input {
+    flex: 1;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 15px;
+}
+
+.todo-input input:focus {
+    border-color: #6B46C1;
+}
+
+.todo-input button {
+    padding: 12px 20px;
+    background-color: #6B46C1;
+    border: none;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.todo-input button:hover {
+    background-color: #805AD5;
+}
+
+/* Todo Cards */
+.todo-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.todo-card {
+    background-color: #fff;
+    padding: 14px 18px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s;
+}
+
+.todo-card:hover {
+    background-color: #fafafa;
+}
+
+.todo-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.todo-check {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.todo-card.completed span {
+    text-decoration: line-through;
+    color: #aaa;
+}
+
+.todo-right button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 8px;
+    transition: 0.2s;
+}
+
+.todo-right .btn-star.active {
+    color: gold;
+}
+
+.todo-right button:hover {
+    transform: scale(1.2);
+}

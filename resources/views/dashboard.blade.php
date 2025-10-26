@@ -1,75 +1,80 @@
-@extends('layout.app')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
 
-@section('title', 'Dashboard - Todo List')
+    {{-- Import Vite --}}
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="bg-gray-100 font-sans antialiased">
 
-@section('content')
-<div class="container-fluid">
-    <div class="row">
-        <!-- Sidebar -->
-        <div class="col-md-3 col-lg-2 bg-light p-3" style="min-height: 100vh;">
-            <h4 class="mb-4">My To Do</h4>
-            <ul class="nav flex-column">
-                <li class="nav-item mb-2">
-                    <a href="#" class="nav-link active fw-bold text-primary">📅 Day</a>
-                </li>
-                <li class="nav-item mb-2">
-                    <a href="#" class="nav-link text-dark">⭐ Important</a>
-                </li>
-                <li class="nav-item mb-2">
-                    <a href="#" class="nav-link text-dark">➕ Tambah List</a>
-                </li>
-            </ul>
-        </div>
+    <div class="flex flex-col h-screen">
 
-        <!-- Main Content -->
-        <div class="col-md-9 col-lg-10 p-4">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3 id="listTitle">📅 Day</h3>
-                <button class="btn btn-danger btn-sm">Logout</button>
-            </div>
+        <div class="flex flex-1">
 
-            <!-- Input Todo -->
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Tambah tugas baru..." id="todoInput">
-                <button class="btn btn-primary" id="addTodoBtn">Tambah</button>
-            </div>
+            {{-- Sidebar --}}
+            <aside class="w-64 bg-white shadow-md flex flex-col">
+                {{-- Header --}}
+                <div class="px-6 py-4 border-b">
+                    <h2 class="text-xl font-bold text-gray-800">My Tasks</h2>
+                </div>
 
-            <!-- Todo List -->
-            <ul class="list-group" id="todoList">
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <div>
-                        <input type="checkbox" class="form-check-input me-2">
-                        <span>Belajar Laravel</span>
+                {{-- Default List --}}
+                <nav class="flex-1 px-4 py-3 space-y-2">
+                    <a href="#" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 font-medium">
+                        🗓️ Daily
+                    </a>
+                    <a href="#" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 font-medium">
+                        ⭐ Important
+                    </a>
+
+                    {{-- Garis pemisah --}}
+                    <hr class="my-3 border-gray-300">
+
+                    {{-- List Tambahan User --}}
+                    <div id="user-lists" class="space-y-2">
+                        <a href="#" class="block px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100">
+                            + New List
+                        </a>
                     </div>
-                    <button class="btn btn-sm btn-outline-danger">Hapus</button>
-                </li>
-            </ul>
+                </nav>
+                
+                <div class="border-t px-6 py-4 flex items-center space-x-3">
+                    @if(Auth::user()->avatar)
+                        <img src="{{ Auth::user()->avatar }}" class="w-10 h-10 rounded-full" alt="avatar">
+                    @else
+                        <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-white font-semibold">
+                            {{ strtoupper(substr(Auth::user()->name ?? 'U', 0, 1)) }}
+                        </div>
+                    @endif
+
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-800">{{ Auth::user()->nama ?? Auth::user()->name }}</p>
+                        <form action="{{ route('logout') }}" method="POST" class="mt-1">
+                            @csrf
+                            <button type="submit" class="text-xs text-red-500 hover:underline">Logout</button>
+                        </form>
+                    </div>
+                </div>
+            </aside>
+
+
+            <main class="flex-1 p-8 overflow-y-auto">
+                <h1 class="text-2xl font-semibold text-gray-800 mb-2">Welcome to Your Todo App</h1>
+                <p class="text-gray-600 mb-6">“Your personal space to manage tasks efficiently.”</p>
+
+                <div class="bg-white shadow rounded-xl p-6">
+                    <p class="text-gray-700">
+                        Ini area utama dashboard kamu. Di sini nanti bisa ditampilkan daftar tugas, grafik, atau data penting lainnya.
+                    </p>
+                </div>
+            </main>
         </div>
+
+
+        <footer class="h-10 bg-gray-800"></footer>
     </div>
-</div>
-
-<script>
-    const input = document.getElementById('todoInput');
-    const list = document.getElementById('todoList');
-    const addBtn = document.getElementById('addTodoBtn');
-
-    addBtn.addEventListener('click', () => {
-        const value = input.value.trim();
-        if (!value) return;
-
-        const li = document.createElement('li');
-        li.className = 'list-group-item d-flex justify-content-between align-items-center';
-        li.innerHTML = `
-            <div>
-                <input type="checkbox" class="form-check-input me-2">
-                <span>${value}</span>
-            </div>
-            <button class="btn btn-sm btn-outline-danger">Hapus</button>
-        `;
-
-        li.querySelector('button').addEventListener('click', () => li.remove());
-        list.appendChild(li);
-        input.value = '';
-    });
-</script>
-@endsection
+</body>
+</html>

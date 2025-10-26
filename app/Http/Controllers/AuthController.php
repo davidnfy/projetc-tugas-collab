@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
+    // ========== LOGIN MANUAL (EMAIL & PASSWORD) ==========
     public function login(Request $request)
     {
         $request->validate([
@@ -23,8 +27,10 @@ class AuthController extends Controller
             ], 401);
         }
 
+        // Hapus token lama
         $user->tokens()->delete();
 
+        // Buat token baru
         $token = $user->createToken('api_token')->plainTextToken;
 
         return response()->json([
@@ -34,6 +40,7 @@ class AuthController extends Controller
         ]);
     }
 
+    // ========== LOGOUT ==========
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
@@ -41,6 +48,7 @@ class AuthController extends Controller
         return response()->json(['message' => 'Logout berhasil']);
     }
 
+    // ========== VIEW LOGIN/REGISTER ==========
     public function showLogin()
     {
         return view('auth.login');
@@ -49,5 +57,34 @@ class AuthController extends Controller
     public function showRegister()
     {
         return view('auth.register');
+    }
+
+    // ========== LOGIN DENGAN GOOGLE ==========
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function handleGoogleCallback()
+    {
+        try {
+            $googleUser = Socialite::driver('google')->user();
+
+            $user = User::firstOrCreate(
+                ['email' => $googleUser->getEmail()],
+                [
+                    'nama' => $googleUser->getName(),
+                    'google_id' => $googleUser->getId(),
+                    'avatar' => $googleUser->getAvatar(),
+                    'password' => Hash::make(Str::random(12)),
+                ]
+            );
+
+            Auth::login($user);
+
+            return redirect('/dashboard'); // arahkan ke dashboard
+        } catch (\Exception $e) {
+            return redirect('/login')->with('error', 'Gagal login dengan Google.');
+        }
     }
 }
