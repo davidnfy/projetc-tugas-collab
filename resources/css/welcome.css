@@ -1,54 +1,56 @@
- body {
-            background-color: #6B46C1; 
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            font-family: 'Segoe UI', sans-serif;
-            color: #fff;
-        }
+body {
+    background-color: #f3f3f3; /* gray lembut */
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-family: 'Poppins', sans-serif; /* ganti font ke Poppins */
+    color: #374151; /* teks gray gelap */
+}
 
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
+h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
 
-        p {
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-        }
+p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
 
-        .btn-custom {
-            padding: 12px 35px;
-            border-radius: 10px;
-            font-weight: 600;
-            transition: 0.3s;
-        }
+.button-group {
+    display: flex;
+    gap: 1rem;
+}
 
-        .btn-primary {
-            background-color: #9F7AEA;
-            border-color: #9F7AEA;
-        }
+.btn-custom {
+    padding: 12px 35px;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: 0.3s;
+}
 
-        .btn-primary:hover {
-            background-color: #805AD5;
-            border-color: #805AD5;
-        }
+/* Tombol utama - solid gray */
+.btn-primary {
+    background-color: #6b7280; /* gray */
+    border-color: #6b7280;
+}
 
-        .btn-outline-primary {
-            color: #9F7AEA;
-            border-color: #9F7AEA;
-        }
+.btn-primary:hover {
+    background-color: #4b5563; /* gray lebih gelap */
+    border-color: #4b5563;
+}
 
-        .btn-outline-primary:hover {
-            background-color: #805AD5;
-            color: #fff;
-            border-color: #805AD5;
-        }
+/* Tombol outline - gray */
+.btn-outline-primary {
+    color: #6b7280;
+    border-color: #6b7280;
+}
 
-        .button-group {
-            display: flex;
-            gap: 1rem;
-        }
+.btn-outline-primary:hover {
+    background-color: #6b7280;
+    color: #fff;
+    border-color: #6b7280;
+}

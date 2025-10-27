@@ -9,13 +9,14 @@ class ImportantTodo extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id', 'title', 'description', 'is_completed', 'due_date',
-    ];
+    protected $table = 'important_todos';
 
-    protected $casts = [
-        'is_completed' => 'boolean',
-        'due_date' => 'datetime',
+    protected $fillable = [
+        'user_id',
+        'title',
+        'description',
+        'is_completed',
+        'due_date',
     ];
 
     public function user()

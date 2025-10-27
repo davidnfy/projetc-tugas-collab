@@ -17,7 +17,7 @@ class User extends Authenticatable
      * Kolom yang boleh diisi (mass assignable)
      */
     protected $fillable = [
-        'nama',        // nama pengguna (bukan 'name')
+        'name',        // nama pengguna (bukan 'name')
         'email',
         'password',
         'google_id',

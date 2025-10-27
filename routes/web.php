@@ -2,88 +2,41 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\DailyTodoController;
+use App\Http\Controllers\ImportantTodoController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
+Route::view('/', 'welcome');
 
-// Halaman depan
-Route::get('/', function () {
-    return view('welcome');
+Route::controller(AuthController::class)->group(function () {
+    Route::get('/login', 'showLogin')->name('login');
+    Route::post('/login', 'login');
+    Route::get('/register', 'showRegister')->name('register');
+    Route::post('/register', 'register');
+    Route::post('/logout', 'logout')->name('logout');
 });
 
-// ==================== AUTH SECTION ====================
+Route::view('/forgot-password', 'auth.forgot-password')->name('password.request');
 
-// Halaman login
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::middleware('auth')->prefix('dashboard')->group(function () {
 
-// Proses login (POST)
-Route::post('/login', function (Request $request) {
-    $request->validate([
-        'email' => 'required|email',
-        'password' => 'required',
-    ]);
+    Route::view('/', 'dashboard')->name('dashboard');
 
-    $credentials = $request->only('email', 'password');
+    Route::controller(DailyTodoController::class)->prefix('daily')->name('daily.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::patch('{id}/toggle', 'toggle')->name('toggle');
+        Route::delete('{id}', 'destroy')->name('destroy');
+    });
 
-    if (Auth::attempt($credentials)) {
-        $request->session()->regenerate();
-        return redirect()->intended('/dashboard');
-    }
-
-    return back()->withErrors([
-        'email' => 'Kredensial tidak cocok dengan catatan kami.',
-    ])->onlyInput('email');
+    Route::controller(ImportantTodoController::class)->prefix('important')->name('important.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::patch('{id}/toggle', 'toggle')->name('toggle');
+        Route::delete('{id}', 'destroy')->name('destroy');
+    });
 });
 
-// Halaman register
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-
-// Proses register (POST)
-Route::post('/register', function (Request $request) {
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users',
-        'password' => 'required|string|min:8|confirmed',
-    ]);
-
-    // Gunakan kolom "nama" agar sesuai dengan tabel users
-    $user = User::create([
-        'nama' => $request->name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-    ]);
-
-    Auth::login($user);
-    return redirect('/dashboard')->with('success', 'Akun berhasil dibuat!');
+Route::controller(AuthController::class)->group(function () {
+    Route::get('/auth/google', 'redirectToGoogle');
+    Route::get('/auth/google/callback', 'handleGoogleCallback');
 });
-
-// Logout
-Route::post('/logout', function (Request $request) {
-    Auth::logout();
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
-    return redirect('/login');
-})->name('logout');
-
-// Lupa password (dummy page)
-Route::get('/forgot-password', function () {
-    return view('auth.forgot-password');
-})->name('password.request');
-
-// ==================== DASHBOARD ====================
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware('auth');
-
-// ==================== GOOGLE LOGIN ====================
-
-// Arahkan ke controller agar lebih bersih
-Route::get('/auth/google', [AuthController::class, 'redirectToGoogle']);
-Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
