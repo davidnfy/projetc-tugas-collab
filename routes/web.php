@@ -22,7 +22,7 @@ Route::controller(AuthController::class)->group(function () {
 Route::view('/forgot-password', 'auth.forgot-password')->name('password.request');
 
 // === DASHBOARD UTAMA ===
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group (function() {
 
     // Dashboard utama
     Route::view('/dashboard', 'dashboard')->name('dashboard');
@@ -52,28 +52,29 @@ Route::controller(ImportantTodoController::class)
     });
 
 
-    // === CATEGORY (USER TODO CATEGORY) ===
     Route::controller(UserTodoCategoryController::class)
-        ->prefix('category')
-        ->name('category.')
-        ->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::post('/', 'store')->name('store');
-            Route::delete('{id}', 'destroy')->name('destroy');
-        });
+    ->prefix('categories')
+    ->name('category.')
+    ->group(function () {
+        Route::get('/', 'index')->name('index');        
+        Route::get('{id}', 'show')->name('show');       
+        Route::post('/', 'store')->name('store');       
+        Route::patch('{id}', 'update')->name('update'); 
+        Route::delete('{id}', 'destroy')->name('destroy'); 
+    });
 
-    // === USER TODO ===
-    Route::controller(UserTodoController::class)
-        ->prefix('user')
-        ->name('user.')
-        ->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::post('/', 'store')->name('store');
-            Route::patch('{id}/toggle', 'toggle')->name('toggle');
-            Route::delete('{id}', 'destroy')->name('destroy');
-        });
+// === USER TODO ===
+Route::controller(UserTodoController::class)
+    ->prefix('todos')
+    ->name('user.')
+    ->group(function () {
+        Route::get('/', 'index')->name('index');              
+        Route::post('/', 'store')->name('store');             
+        Route::patch('{id}', 'update')->name('update');       
+        Route::patch('{id}/toggle', 'toggle')->name('toggle');
+        Route::delete('{id}', 'destroy')->name('destroy');   
+    });
 });
-
 // === GOOGLE AUTH ===
 Route::controller(AuthController::class)->group(function () {
     Route::get('/auth/google', 'redirectToGoogle');
