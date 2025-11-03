@@ -13,69 +13,60 @@ class DailyTodoController extends Controller
         $todos = DailyTodo::where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->get();
-
-        // kalau request AJAX → kirim partial saja
+            
         if (request()->ajax()) {
             return view('partials.daily', compact('todos'))->render();
         }
 
-        // kalau akses langsung (misal buka /daily di browser)
-        return view('dashboard', compact('todos'));
+        return view('dashboard', [
+            'page' => 'daily',
+            'todos' => $todos
+        ]);
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'due_date' => 'nullable|date',
         ]);
 
         DailyTodo::create([
             'user_id' => Auth::id(),
-            'title' => $validated['title'],
-            'description' => $validated['description'] ?? null,
-            'due_date' => $validated['due_date'] ?? null,
+            'title' => $request->title,
             'is_completed' => false,
         ]);
 
-        return $this->returnUpdatedList();
+        return redirect()->route('daily.index')->with('success', 'Tugas berhasil ditambahkan!');
     }
 
     public function toggle($id)
     {
         $todo = DailyTodo::where('user_id', Auth::id())->findOrFail($id);
-        $todo->update(['is_completed' => !$todo->is_completed]);
+        $todo->is_completed = !$todo->is_completed;
+        $todo->save();
 
-        return $this->returnUpdatedList();
+        return redirect()->route('daily.index')->with('updated', 'Status tugas berhasil diperbarui!');
     }
 
-    public function update($id, Request $request)
+    public function update(Request $request, $id)
     {
-        $validated = $request->validate([
+        $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'due_date' => 'nullable|date',
         ]);
 
         $todo = DailyTodo::where('user_id', Auth::id())->findOrFail($id);
-        $todo->update($validated);
+        $todo->title = $request->title;
+        $todo->save();
 
-        return $this->returnUpdatedList();
+        return redirect()->route('daily.index')->with('updated', 'Tugas berhasil diperbarui!');
     }
 
     public function destroy($id)
     {
-        DailyTodo::where('user_id', Auth::id())->findOrFail($id)->delete();
-        return $this->returnUpdatedList();
-    }
+        $todo = DailyTodo::where('user_id', Auth::id())->findOrFail($id);
+        $todo->delete();
 
-    private function returnUpdatedList()
-    {
-        $todos = DailyTodo::where('user_id', Auth::id())
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        return view('partials.daily', compact('todos'))->render();
+        // 🔔 Tambahkan notifikasi
+        return redirect()->route('daily.index')->with('deleted', 'Tugas berhasil dihapus!');
     }
 }

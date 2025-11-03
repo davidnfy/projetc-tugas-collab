@@ -17,10 +17,13 @@
     <link rel="stylesheet" href="{{ asset('css/forgot-password.css') }}">
     <link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
 
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- Inline styles khusus untuk halaman auth (hanya berlaku bila body-class = "auth") -->
     <style>
         body.auth {
-            background-color: #6B46C1; /* ungu hanya untuk auth */
+            background-color: #6B46C1;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -54,13 +57,7 @@
 </head>
 <body class="@yield('body-class')">
 
-    {{-- 
-        Logika tampilan:
-        - Jika halaman mengatur body-class = "auth" -> tampilkan wrapper .auth-container (untuk form login/register)
-        - Jika bukan ("dashboard" atau kosong) -> tampilkan full content (untuk halaman dashboard)
-    --}}
     @php
-        // Ambil isi dari section 'body-class' (trim untuk mencegah whitespace)
         $bodyClass = trim($__env->yieldContent('body-class'));
     @endphp
 
@@ -73,7 +70,47 @@
         @yield('content')
     @endif
 
-    <!-- Optional: bootstrap bundle JS (jika butuh komponen bootstrap) -->
+    <!-- Optional: Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Vite build (untuk JS app utama) -->
+    @vite(['resources/js/app.js'])
+
+    {{-- ✅ SweetAlert2 Flash Message --}}
+    @if (session('success'))
+        <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: '{{ session('success') }}',
+            timer: 1800,
+            showConfirmButton: false
+        });
+        </script>
+    @endif
+
+    @if (session('updated'))
+        <script>
+        Swal.fire({
+            icon: 'info',
+            title: 'Diperbarui!',
+            text: '{{ session('updated') }}',
+            timer: 1800,
+            showConfirmButton: false
+        });
+        </script>
+    @endif
+
+    @if (session('deleted'))
+        <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Dihapus!',
+            text: '{{ session('deleted') }}',
+            timer: 1800,
+            showConfirmButton: false
+        });
+        </script>
+    @endif
 </body>
 </html>

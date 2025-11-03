@@ -8,17 +8,23 @@ use Illuminate\Support\Facades\Auth;
 
 class ImportantTodoController extends Controller
 {
-    // Menampilkan semua todo penting milik user
     public function index()
     {
         $todos = ImportantTodo::where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('important', compact('todos'));
+        if (request()->ajax()) {
+            return view('partials.important', compact('todos'))->render();
+        }
+
+        return view('dashboard', [
+            'page' => 'important',
+            'todos' => $todos
+        ]);
     }
 
-    // Menyimpan todo penting baru
+    // ✅ CREATE
     public function store(Request $request)
     {
         $request->validate([
@@ -31,25 +37,41 @@ class ImportantTodoController extends Controller
             'is_completed' => false,
         ]);
 
-        return redirect()->route('important.index');
+        // 🔔 SweetAlert notif
+        return redirect()->route('important.index')->with('success', 'Tugas penting berhasil ditambahkan!');
     }
 
-    // Mengubah status selesai / belum
+    // ✅ TOGGLE (ubah status)
     public function toggle($id)
     {
         $todo = ImportantTodo::where('user_id', Auth::id())->findOrFail($id);
         $todo->is_completed = !$todo->is_completed;
         $todo->save();
 
-        return redirect()->route('important.index');
+        // 🔔 SweetAlert notif
+        return redirect()->route('important.index')->with('updated', 'Status tugas penting diperbarui!');
     }
 
-    // Menghapus todo
+    // ✅ UPDATE (ubah judul)
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+        ]);
+
+        $todo = ImportantTodo::where('user_id', Auth::id())->findOrFail($id);
+        $todo->title = $request->title;
+        $todo->save();
+
+        // 🔔 SweetAlert notif
+        return redirect()->route('important.index')->with('updated', 'Tugas berhasil diperbarui!');
+    }
+
     public function destroy($id)
     {
         $todo = ImportantTodo::where('user_id', Auth::id())->findOrFail($id);
         $todo->delete();
 
-        return redirect()->route('important.index');
+        return redirect()->route('important.index')->with('deleted', 'Tugas berhasil dihapus!');
     }
 }

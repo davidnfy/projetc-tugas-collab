@@ -1,79 +1,159 @@
 export function initDailyPage() {
-    const token = document.querySelector('meta[name="csrf-token"]').content;
+    console.log("✅ Daily page initialized");
 
-    const addBtn = document.getElementById('btn-add-task');
-    const addForm = document.getElementById('form-add-task');
-    const pendingList = document.getElementById('pending-list');
-    const completedList = document.getElementById('completed-list');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    const titleInput = document.getElementById("daily-title");
+    const descInput = document.getElementById("daily-description");
+    const dateInput = document.getElementById("daily-due-date");
+    const form = document.getElementById("daily-form");
+    const extraFields = document.getElementById("extra-fields");
+    const expandBtn = document.getElementById("expand-form");
+    const saveBtn = document.getElementById("save-daily");
 
-    // toggle form tambah
-    addBtn.addEventListener('click', () => {
-        addForm.classList.toggle('hidden');
+    // === Expand form ===
+    expandBtn?.addEventListener("click", () => {
+        extraFields.classList.toggle("hidden");
     });
 
-    // tambah task baru
-    addForm.addEventListener('submit', async e => {
+    // === Tambah Tugas ===
+    saveBtn?.addEventListener("click", async (e) => {
         e.preventDefault();
-        const title = document.getElementById('new-title').value.trim();
-        const desc = document.getElementById('new-description').value.trim();
-        const due = document.getElementById('new-due-date').value;
+        const title = titleInput.value.trim();
+        if (!title) return showToast("Judul tugas wajib diisi!", "error");
 
-        if (!title) return alert('Masukkan judul task.');
-
-        const res = await fetch('/daily', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': token
-            },
-            body: JSON.stringify({ title, description: desc, due_date: due })
-        });
-
-        const html = await res.text();
-        document.querySelector('#main-content').innerHTML = html;
-        initDailyPage(); // reinit event listener
-    });
-
-    // edit title inline
-    document.querySelectorAll('.edit-title').forEach(input => {
-        input.addEventListener('blur', async e => {
-            const id = e.target.dataset.id;
-            const newTitle = e.target.value.trim();
-            await fetch(`/daily/${id}`, {
-                method: 'PATCH',
+        try {
+            const res = await fetch("/daily", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': token
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": csrfToken,
+                    "X-Requested-With": "XMLHttpRequest",
                 },
-                body: JSON.stringify({ title: newTitle })
+                body: JSON.stringify({
+                    title,
+                    description: descInput?.value ?? "",
+                    due_date: dateInput?.value ?? null,
+                }),
             });
-        });
+
+            const data = await res.json();
+            if (data?.success) {
+                showToast("Tugas berhasil ditambahkan", "success");
+                await reloadDailyList();
+                form.reset();
+                extraFields.classList.add("hidden");
+            } else showToast("Gagal menambah tugas", "error");
+        } catch {
+            showToast("Terjadi kesalahan koneksi", "error");
+        }
     });
 
-    // toggle selesai
-    document.querySelectorAll('.toggle-complete').forEach(chk => {
-        chk.addEventListener('change', async e => {
+    // === Toggle status selesai ===
+    document.querySelectorAll(".toggle-daily").forEach((checkbox) => {
+        checkbox.addEventListener("change", async (e) => {
             const id = e.target.dataset.id;
-            await fetch(`/daily/${id}/toggle`, {
-                method: 'PATCH',
-                headers: { 'X-CSRF-TOKEN': token }
-            });
-            location.reload();
+            const prev = e.target.checked;
+            e.target.disabled = true;
+
+            try {
+                const res = await fetch(`/daily/${id}/toggle`, {
+                    method: "PATCH",
+                    headers: {
+                        "X-CSRF-TOKEN": csrfToken,
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                });
+
+                if (res.ok) {
+                    showToast("Status tugas diperbarui", "success");
+                    await reloadDailyList();
+                } else {
+                    e.target.checked = !prev;
+                    showToast("Gagal memperbarui status", "error");
+                }
+            } catch {
+                e.target.checked = !prev;
+                showToast("Koneksi gagal saat toggle", "error");
+            } finally {
+                e.target.disabled = false;
+            }
         });
     });
 
-    // hapus task
-    document.querySelectorAll('.delete-task').forEach(btn => {
-        btn.addEventListener('click', async e => {
-            const id = e.target.dataset.id;
-            if (!confirm('Hapus task ini?')) return;
+    // === Hapus Tugas (macOS Confirm Dialog) ===
+    document.querySelectorAll(".delete-daily").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+            const id = btn.dataset.id;
+            if (!id) return;
 
-            await fetch(`/daily/${id}`, {
-                method: 'DELETE',
-                headers: { 'X-CSRF-TOKEN': token }
-            });
+            const confirmed = await confirmDelete();
+            if (!confirmed) return;
 
-            e.target.closest('li').remove();
+            try {
+                const res = await fetch(`/daily/${id}`, {
+                    method: "DELETE",
+                    headers: {
+                        "X-CSRF-TOKEN": csrfToken,
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                });
+
+                if (res.ok) {
+                    showToast("Tugas berhasil dihapus", "success");
+                    await reloadDailyList();
+                } else showToast("Gagal menghapus tugas", "error");
+            } catch {
+                showToast("Koneksi gagal saat menghapus", "error");
+            }
         });
     });
+
+    // === Edit Judul Inline ===
+    document.querySelectorAll(".editable-title").forEach((el) => {
+        el.addEventListener("blur", async () => {
+            const id = el.dataset.id;
+            const title = el.innerText.trim();
+            if (!title) {
+                showToast("Judul tidak boleh kosong", "error");
+                return await reloadDailyList();
+            }
+
+            try {
+                const res = await fetch(`/daily/${id}`, {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": csrfToken,
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                    body: JSON.stringify({ title }),
+                });
+
+                if (res.ok) showToast("Judul tersimpan", "success");
+                else showToast("Gagal menyimpan perubahan", "error");
+            } catch {
+                showToast("Error koneksi saat menyimpan", "error");
+            }
+        });
+    });
+
+    // === Reload daftar === 
+    async function reloadDailyList() {
+        try {
+            const res = await fetch("/daily", {
+                headers: { "X-Requested-With": "XMLHttpRequest" },
+            });
+            const html = await res.text();
+
+            const temp = document.createElement("div");
+            temp.innerHTML = html;
+            const newContent = temp.querySelector("#content")?.innerHTML || html;
+            const contentEl = document.getElementById("content");
+            if (contentEl) contentEl.innerHTML = newContent;
+
+            initDailyPage(); // Re-init semua listener
+        } catch {
+            showToast("Gagal memuat ulang daftar tugas", "error");
+        }
+    }
 }
