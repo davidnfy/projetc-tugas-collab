@@ -1,4 +1,3 @@
-// resources/js/user.js
 export function initUserTodoPage() {
     console.log("✅ User Todo Page initialized");
 
@@ -10,7 +9,6 @@ export function initUserTodoPage() {
         return;
     }
 
-    // === Tambah Todo ===
     addForm?.addEventListener("submit", async (e) => {
         e.preventDefault();
 

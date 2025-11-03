@@ -40,16 +40,16 @@ Route::middleware('auth')->group (function() {
         });
 
     // === IMPORTANT ===
-Route::controller(ImportantTodoController::class)
-    ->prefix('important')
-    ->name('important.')
-    ->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::post('/', 'store')->name('store');
-        Route::patch('{id}', 'update')->name('update'); // ✅ tambahkan ini
-        Route::patch('{id}/toggle', 'toggle')->name('toggle');
-        Route::delete('{id}', 'destroy')->name('destroy');
-    });
+    Route::controller(ImportantTodoController::class)
+        ->prefix('important')
+        ->name('important.')
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::post('/', 'store')->name('store');
+            Route::patch('{id}', 'update')->name('update'); // ✅ tambahkan ini
+            Route::patch('{id}/toggle', 'toggle')->name('toggle');
+            Route::delete('{id}', 'destroy')->name('destroy');
+        });
 
 
     Route::controller(UserTodoCategoryController::class)
@@ -63,7 +63,6 @@ Route::controller(ImportantTodoController::class)
         Route::delete('{id}', 'destroy')->name('destroy'); 
     });
 
-// === USER TODO ===
 Route::controller(UserTodoController::class)
     ->prefix('todos')
     ->name('user.')
