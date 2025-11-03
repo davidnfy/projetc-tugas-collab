@@ -28,7 +28,7 @@
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Username</label>
                 <div class="flex items-center border border-gray-300 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-gray-500 bg-gray-50">
                     <i class="fas fa-user text-gray-400 mr-3"></i>
-                    <input type="text" name="name" placeholder="Enter your username" required
+                    <input type="text" name="nama" placeholder="Enter your username" required
                         class="w-full bg-transparent outline-none border-none focus:ring-0 text-gray-800 placeholder-gray-400">
                 </div>
             </div>

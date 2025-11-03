@@ -15,7 +15,7 @@ class ImportantTodoController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('partials.important', compact('todos'));
+        return view('important', compact('todos'));
     }
 
     // Menyimpan todo penting baru

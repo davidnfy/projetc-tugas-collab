@@ -26,20 +26,20 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'nama' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|confirmed',
         ]);
 
         $user = User::create([
-            'name' => $request->name,       // pastikan kolom 'name' ada di tabel users
+            'nama' => $request->nama,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        Auth::login($user); // login otomatis setelah register
+        Auth::login($user);
 
-        return redirect('/dashboard')->with('success', 'Akun berhasil dibuat!');
+        return redirect('dashboard')->with('success', 'Akun berhasil dibuat!');
     }
 
     // ================= LOGIN =================
@@ -54,7 +54,7 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/dashboard');
+            return redirect()->intended('dashboard');
         }
 
         return back()->withErrors([
@@ -86,18 +86,18 @@ class AuthController extends Controller
             $user = User::firstOrCreate(
                 ['email' => $googleUser->getEmail()],
                 [
-                    'name' => $googleUser->getName(),  // pastikan kolom 'name'
+                    'nama' => $googleUser->getName(), 
                     'google_id' => $googleUser->getId(),
                     'avatar' => $googleUser->getAvatar(),
                     'password' => Hash::make(Str::random(12)),
                 ]
             );
 
-            Auth::login($user);
+            Auth::guard('web')->login($user);
+            return redirect()->intended('/dashboard');
 
-            return redirect('/dashboard');
         } catch (\Exception $e) {
-            return redirect('/login')->with('error', 'Gagal login dengan Google.');
+            return redirect('/login')->with('error', 'Gagal login dengan Google.' . $e->getMessage());
         }
     }
 }
