@@ -1,7 +1,7 @@
 export function initUserTodoPage() {
     console.log("✅ User Todo Page initialized");
 
-    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
     const addForm = document.getElementById("addUserTodoForm");
 
     if (!csrfToken) {
@@ -108,14 +108,27 @@ export function initUserTodoPage() {
         });
     });
 
-    document.querySelectorAll(".delete-user-todo").forEach((btn) => {
+    document.querySelectorAll(".btn-delete").forEach((btn) => {
         btn.addEventListener("click", async (e) => {
             e.preventDefault();
-            const confirmed = confirm("Hapus tugas ini?");
-            if (!confirmed) return;
 
-            const url = btn.dataset.url;
-            if (!url) return;
+            const form = btn.closest("form");
+            if (!form) return;
+            const url = form.getAttribute("action");
+
+            const result = await Swal.fire({
+                title: "Te mbok busek tah?",
+                text: "Ngga iso dibatalno loh..",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Iyo, ngotot",
+                cancelButtonText: "Gasido",
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                reverseButtons: true,
+            });
+
+            if (!result.isConfirmed) return;
 
             try {
                 const res = await fetch(url, {
@@ -127,11 +140,28 @@ export function initUserTodoPage() {
                 });
 
                 if (res.ok) {
-                    showToast("Tugas dihapus!", "success");
+                    await Swal.fire({
+                        icon: "success",
+                        title: "Tugas dihapus!",
+                        showConfirmButton: false,
+                        timer: 1200,
+                    });
+
                     await reloadUserTodoList();
-                } else showToast("Gagal menghapus tugas!", "error");
-            } catch {
-                showToast("Koneksi gagal saat hapus!", "error");
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Gagal menghapus!",
+                        text: "Terjadi kesalahan saat menghapus tugas.",
+                    });
+                }
+            } catch (err) {
+                console.error(err);
+                Swal.fire({
+                    icon: "error",
+                    title: "Gagal!",
+                    text: "Koneksi gagal saat menghapus tugas.",
+                });
             }
         });
     });

@@ -69,8 +69,7 @@
                             @method('DELETE')
                             <button
                                 type="submit"
-                                class="text-red-500 hover:text-red-600 transition"
-                                onclick="return confirm('Hapus tugas ini?')"
+                                class="text-red-500 hover:text-red-600 transition btn-delete"
                             >
                                 ❌
                             </button>
