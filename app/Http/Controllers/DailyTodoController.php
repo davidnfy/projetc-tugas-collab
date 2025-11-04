@@ -36,7 +36,7 @@ class DailyTodoController extends Controller
             'is_completed' => false,
         ]);
 
-        return redirect()->route('daily.index')->with('success', 'Tugas berhasil ditambahkan!');
+        return redirect()->route('daily.index')->with('success', 'Berhasil ditambahkan!');
     }
 
     public function toggle($id)
@@ -45,7 +45,7 @@ class DailyTodoController extends Controller
         $todo->is_completed = !$todo->is_completed;
         $todo->save();
 
-        return redirect()->route('daily.index')->with('updated', 'Status tugas berhasil diperbarui!');
+        return redirect()->route('daily.index')->with('updated', 'Status diperbarui!');
     }
 
     public function update(Request $request, $id)
@@ -58,7 +58,7 @@ class DailyTodoController extends Controller
         $todo->title = $request->title;
         $todo->save();
 
-        return redirect()->route('daily.index')->with('updated', 'Tugas berhasil diperbarui!');
+        return redirect()->route('daily.index')->with('updated', 'Berhasil diperbarui!');
     }
 
     public function destroy($id)
@@ -66,7 +66,6 @@ class DailyTodoController extends Controller
         $todo = DailyTodo::where('user_id', Auth::id())->findOrFail($id);
         $todo->delete();
 
-        // 🔔 Tambahkan notifikasi
-        return redirect()->route('daily.index')->with('deleted', 'Tugas berhasil dihapus!');
+        return redirect()->route('daily.index')->with('deleted', 'Berhasil dihapus!');
     }
 }

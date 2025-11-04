@@ -1,7 +1,6 @@
-@extends('layout.app') {{-- pastikan nama folder dan file sesuai layout kamu --}}
+@extends('layout.app') 
 @section('title', 'Important Tasks')
 
 @section('content')
-    {{-- Ini isi dari partial --}}
     @include('partials.important', ['todos' => $todos])
 @endsection

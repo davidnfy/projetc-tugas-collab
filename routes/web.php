@@ -7,10 +7,8 @@ use App\Http\Controllers\ImportantTodoController;
 use App\Http\Controllers\UserTodoController;
 use App\Http\Controllers\UserTodoCategoryController;
 
-// === HOME / WELCOME ===
 Route::view('/', 'welcome');
 
-// === AUTH ===
 Route::controller(AuthController::class)->group(function () {
     Route::get('/login', 'showLogin')->name('login');
     Route::post('/login', 'login');
@@ -21,60 +19,55 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::view('/forgot-password', 'auth.forgot-password')->name('password.request');
 
-// === DASHBOARD UTAMA ===
-Route::middleware('auth')->group (function() {
+Route::middleware('auth')->group(function () {
 
-    // Dashboard utama
     Route::view('/dashboard', 'dashboard')->name('dashboard');
 
-    // === DAILY ===
     Route::controller(DailyTodoController::class)
         ->prefix('daily')
         ->name('daily.')
         ->group(function () {
-            Route::get('/', 'index')->name('index');        // <--- Tampilkan halaman daily lewat controller
+            Route::get('/', 'index')->name('index');
             Route::post('/', 'store')->name('store');
             Route::patch('{id}', 'update')->name('update');
             Route::patch('{id}/toggle', 'toggle')->name('toggle');
             Route::delete('{id}', 'destroy')->name('destroy');
         });
 
-    // === IMPORTANT ===
     Route::controller(ImportantTodoController::class)
         ->prefix('important')
         ->name('important.')
         ->group(function () {
             Route::get('/', 'index')->name('index');
             Route::post('/', 'store')->name('store');
-            Route::patch('{id}', 'update')->name('update'); // ✅ tambahkan ini
+            Route::patch('{id}', 'update')->name('update');
             Route::patch('{id}/toggle', 'toggle')->name('toggle');
             Route::delete('{id}', 'destroy')->name('destroy');
         });
 
-
     Route::controller(UserTodoCategoryController::class)
-    ->prefix('categories')
-    ->name('category.')
-    ->group(function () {
-        Route::get('/', 'index')->name('index');        
-        Route::get('{id}', 'show')->name('show');       
-        Route::post('/', 'store')->name('store');       
-        Route::patch('{id}', 'update')->name('update'); 
-        Route::delete('{id}', 'destroy')->name('destroy'); 
-    });
+        ->prefix('categories')
+        ->name('category.')
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('{id}', 'show')->name('show');
+            Route::post('/', 'store')->name('store');
+            Route::patch('{id}', 'update')->name('update');
+            Route::delete('{id}', 'destroy')->name('destroy');
+        });
 
-Route::controller(UserTodoController::class)
-    ->prefix('todos')
-    ->name('user.')
-    ->group(function () {
-        Route::get('/', 'index')->name('index');              
-        Route::post('/', 'store')->name('store');             
-        Route::patch('{id}', 'update')->name('update');       
-        Route::patch('{id}/toggle', 'toggle')->name('toggle');
-        Route::delete('{id}', 'destroy')->name('destroy');   
-    });
+    Route::controller(UserTodoController::class)
+        ->prefix('todos')
+        ->name('user.')
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::post('/', 'store')->name('store');
+            Route::patch('{id}', 'update')->name('update');
+            Route::patch('{id}/toggle', 'toggle')->name('toggle');
+            Route::delete('{id}', 'destroy')->name('destroy');
+        });
 });
-// === GOOGLE AUTH ===
+
 Route::controller(AuthController::class)->group(function () {
     Route::get('/auth/google', 'redirectToGoogle');
     Route::get('/auth/google/callback', 'handleGoogleCallback');

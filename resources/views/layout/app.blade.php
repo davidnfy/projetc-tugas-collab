@@ -5,13 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'My App')</title>
 
-    <!-- CSRF (berguna jika nanti pakai form/ajax) -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <!-- Bootstrap CDN -->
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Project CSS -->
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('css/forgot-password.css') }}">
@@ -20,7 +19,7 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- Inline styles khusus untuk halaman auth (hanya berlaku bila body-class = "auth") -->
+    <!-- Inline style (khusus halaman auth) -->
     <style>
         body.auth {
             background-color: #6B46C1;
@@ -35,7 +34,7 @@
             background: #fff;
             padding: 2.5rem 2rem;
             border-radius: 1rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
         body.auth .btn-primary {
             background-color: #6B46C1;
@@ -55,61 +54,59 @@
         }
     </style>
 </head>
-<body class="@yield('body-class')">
 
+<body class="@yield('body-class')">
     @php
         $bodyClass = trim($__env->yieldContent('body-class'));
     @endphp
 
-    @if($bodyClass === 'auth')
+    @if ($bodyClass === 'auth')
         <div class="auth-container">
             @yield('content')
         </div>
     @else
-        {{-- Full layout (mis. dashboard) --}}
         @yield('content')
     @endif
 
-    <!-- Optional: Bootstrap JS -->
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Vite build (untuk JS app utama) -->
     @vite(['resources/js/app.js'])
 
-    {{-- ✅ SweetAlert2 Flash Message --}}
+    <!-- SweetAlert Flash -->
     @if (session('success'))
         <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Berhasil!',
-            text: '{{ session('success') }}',
-            timer: 1800,
-            showConfirmButton: false
-        });
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '{{ session('success') }}',
+                timer: 1800,
+                showConfirmButton: false
+            });
         </script>
     @endif
 
     @if (session('updated'))
         <script>
-        Swal.fire({
-            icon: 'info',
-            title: 'Diperbarui!',
-            text: '{{ session('updated') }}',
-            timer: 1800,
-            showConfirmButton: false
-        });
+            Swal.fire({
+                icon: 'info',
+                title: 'Diperbarui!',
+                text: '{{ session('updated') }}',
+                timer: 1800,
+                showConfirmButton: false
+            });
         </script>
     @endif
 
     @if (session('deleted'))
         <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Dihapus!',
-            text: '{{ session('deleted') }}',
-            timer: 1800,
-            showConfirmButton: false
-        });
+            Swal.fire({
+                icon: 'success',
+                title: 'Dihapus!',
+                text: '{{ session('deleted') }}',
+                timer: 1800,
+                showConfirmButton: false
+            });
         </script>
     @endif
 </body>

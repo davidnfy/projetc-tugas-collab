@@ -1,13 +1,12 @@
 <div class="p-6">
     <h2 class="text-2xl font-semibold mb-4 text-gray-800">🗓️ Daily Tasks</h2>
 
-    {{-- Form tambah todo --}}
     <form id="addDailyForm" action="{{ route('daily.store') }}" method="POST" class="flex mb-4">
         @csrf
         <input 
             type="text" 
             name="title" 
-            placeholder="Tambah tugas harian..." 
+            placeholder="Add an daily task..." 
             class="flex-grow p-2 border rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-700"
             required
         >
@@ -19,15 +18,13 @@
         </button>
     </form>
 
-    {{-- Daftar tugas --}}
     @if ($todos->isEmpty())
-        <p class="text-gray-500 text-center mt-8">Belum ada tugas harian.</p>
+        <p class="text-gray-500 text-center mt-8">No daily tasks yet.</p>
     @else
         <ul class="space-y-3">
             @foreach ($todos as $todo)
                 <li class="flex items-center justify-between bg-white shadow-sm p-3 rounded-lg hover:shadow-md transition">
                     <div class="flex items-center gap-3">
-                        {{-- Checkbox toggle --}}
                         <form action="{{ route('daily.toggle', $todo->id) }}" method="POST">
                             @csrf
                             @method('PATCH')
@@ -42,7 +39,6 @@
                             </button>
                         </form>
 
-                        {{-- Judul tugas + inline edit --}}
                         <form action="{{ route('daily.update', $todo->id) }}" method="POST" class="flex items-center gap-2">
                             @csrf
                             @method('PATCH')
@@ -59,7 +55,6 @@
                         </form>
                     </div>
 
-                    {{-- Tombol aksi --}}
                     <div class="flex gap-3 items-center">
                         <button 
                             class="text-blue-500 hover:text-blue-600 transition edit-btn"

@@ -1,7 +1,6 @@
 <div class="p-6">
     <h2 class="text-2xl font-semibold mb-4 text-gray-800">Important Tasks</h2>
 
-    {{-- Form tambah todo --}}
     <form id="addImportantForm" action="{{ route('important.store') }}" method="POST" class="flex mb-4">
         @csrf
         <input 
@@ -19,7 +18,6 @@
         </button>
     </form>
 
-    {{-- Daftar todo --}}
     @if ($todos->isEmpty())
         <p class="text-gray-500 text-center mt-8">No important tasks yet.</p>
     @else
@@ -27,7 +25,6 @@
             @foreach ($todos as $todo)
                 <li class="flex items-center justify-between bg-white shadow-sm p-3 rounded-lg hover:shadow-md transition">
                     <div class="flex items-center gap-3">
-                        {{-- Checkbox toggle --}}
                         <form action="{{ route('important.toggle', $todo->id) }}" method="POST">
                             @csrf
                             @method('PATCH')
@@ -42,7 +39,6 @@
                             </button>
                         </form>
 
-                        {{-- Judul task --}}
                         <form action="{{ route('important.update', $todo->id) }}" method="POST" class="flex items-center gap-2">
                             @csrf
                             @method('PATCH')
@@ -59,9 +55,7 @@
                         </form>
                     </div>
 
-                    {{-- Tombol aksi --}}
                     <div class="flex gap-3 items-center">
-                        {{-- Tombol edit --}}
                         <button 
                             class="text-blue-500 hover:text-blue-600 transition edit-btn"
                             title="Edit"
@@ -69,7 +63,6 @@
                             ✏️
                         </button>
 
-                        {{-- Tombol hapus --}}
                         <form action="{{ route('important.destroy', $todo->id) }}" method="POST">
                             @csrf
                             @method('DELETE')

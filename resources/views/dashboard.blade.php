@@ -8,7 +8,6 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        /* --- macOS style toast --- */
         .toast {
             position: fixed;
             top: 2rem;
@@ -31,7 +30,6 @@
         .toast.show { opacity: 1; transform: translateY(0); }
         .toast-icon { font-size: 1.25rem; }
 
-        /* --- macOS style confirm dialog --- */
         .confirm-dialog {
             position: fixed;
             inset: 0;
@@ -67,9 +65,7 @@
 <body class="bg-gray-100 font-sans antialiased">
 <div class="flex flex-col h-screen">
     <div class="flex flex-1">
-        {{-- SIDEBAR --}}
         <x-sidebar />
-
         <main id="main-content" class="flex-1 p-8 overflow-y-auto transition-all duration-300">
             <div id="content">
                 @if(isset($page))
@@ -78,7 +74,6 @@
                     <div id="default-dashboard">
                         <h1 class="text-2xl font-semibold text-gray-800 mb-2">Welcome to Your Todo App</h1>
                         <p class="text-gray-600 mb-6">“Your personal space to manage tasks efficiently.”</p>
-
                         <div class="bg-white shadow rounded-xl p-6">
                             <p class="text-gray-700">
                                 Ini area utama dashboard kamu. Klik menu di kiri untuk membuka halaman Daily atau Important Tasks.
@@ -89,15 +84,11 @@
             </div>
         </main>
     </div>
-
-    {{-- FOOTER --}}
     <x-footer />
 </div>
 
-{{-- === TOAST CONTAINER === --}}
 <div id="toast" class="toast hidden"></div>
 
-{{-- === CONFIRM DIALOG === --}}
 <div id="confirm-dialog" class="confirm-dialog">
     <div class="confirm-box">
         <h2 class="text-lg font-semibold mb-3">Yakin ingin menghapus?</h2>
@@ -109,7 +100,6 @@
     </div>
 </div>
 
-{{-- === JS === --}}
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const main = document.getElementById('main-content');
@@ -118,7 +108,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnYes = document.getElementById('confirm-yes');
     const btnNo = document.getElementById('confirm-no');
 
-    // ===== Toast notification =====
     window.showToast = (message, type = 'info') => {
         const icons = { success: '✅', error: '❌', info: '💡' };
         toast.innerHTML = `<span class="toast-icon">${icons[type] || '💬'}</span>${message}`;
@@ -130,7 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000);
     };
 
-    // ===== Confirm dialog =====
     window.confirmDelete = () => new Promise(resolve => {
         confirmDialog.classList.add('show');
         const close = (result) => {
@@ -141,7 +129,6 @@ document.addEventListener('DOMContentLoaded', () => {
         btnNo.onclick = () => close(false);
     });
 
-    // ===== Dynamic content loader =====
     const loadContent = async (url, push = true) => {
         const content = document.getElementById('content');
         content.innerHTML = `
@@ -176,7 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('popstate', () => loadContent(location.pathname, false));
 
-    // ✅ Flash Toasts dari Laravel session
     @if(session('success'))
         showToast("{{ session('success') }}", "success");
     @endif

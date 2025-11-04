@@ -1,12 +1,12 @@
 body {
-    background-color: #f3f3f3; /* gray lembut */
+    background-color: #f3f3f3;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    font-family: 'Poppins', sans-serif; /* ganti font ke Poppins */
-    color: #374151; /* teks gray gelap */
+    font-family: 'Poppins', sans-serif;
+    color: #374151;
 }
 
 h1 {
@@ -32,18 +32,16 @@ p {
     transition: 0.3s;
 }
 
-/* Tombol utama - solid gray */
 .btn-primary {
-    background-color: #6b7280; /* gray */
+    background-color: #6b7280;
     border-color: #6b7280;
 }
 
 .btn-primary:hover {
-    background-color: #4b5563; /* gray lebih gelap */
+    background-color: #4b5563;
     border-color: #4b5563;
 }
 
-/* Tombol outline - gray */
 .btn-outline-primary {
     color: #6b7280;
     border-color: #6b7280;

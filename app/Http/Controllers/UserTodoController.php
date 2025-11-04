@@ -37,8 +37,7 @@ class UserTodoController extends Controller
         return view('dashboard', [
             'page' => 'user',
             'category' => $category,
-            'todos' => $todos,
-        ]);
+            'todos' => $todos,        ]);
     }
 
     public function store(Request $request)
@@ -57,7 +56,7 @@ class UserTodoController extends Controller
 
         return $request->ajax()
             ? response()->json($todo)
-            : redirect()->back()->with('success', 'Todo berhasil ditambahkan!');
+            : redirect()->back()->with('success', 'Berhasil ditambahkan!');
     }
 
     public function toggle($id)
@@ -68,7 +67,7 @@ class UserTodoController extends Controller
 
         return request()->ajax()
             ? response()->json($todo)
-            : redirect()->back()->with('updated', 'Status todo diperbarui!');
+            : redirect()->back()->with('updated', 'Status diperbarui!');
     }
 
     public function update(Request $request, $id)
@@ -82,7 +81,7 @@ class UserTodoController extends Controller
 
         return request()->ajax()
             ? response()->json($todo)
-            : redirect()->back()->with('updated', 'Todo berhasil diperbarui!');
+            : redirect()->back()->with('updated', ' Berhasil diperbarui!');
     }
 
     public function destroy($id)
@@ -92,6 +91,6 @@ class UserTodoController extends Controller
 
         return request()->ajax()
             ? response()->json(['message' => 'Todo dihapus.'])
-            : redirect()->back()->with('deleted', 'Todo berhasil dihapus!');
+            : redirect()->back()->with('deleted', 'Berhasil dihapus!');
     }
 }

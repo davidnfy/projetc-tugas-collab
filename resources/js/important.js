@@ -5,7 +5,6 @@ export function initImportantPage() {
     const form = document.getElementById("important-form");
     const input = document.getElementById("important-title");
 
-    // === Tambah tugas penting ===
     form?.addEventListener("submit", async (e) => {
         e.preventDefault();
         const title = input.value.trim();
@@ -24,16 +23,15 @@ export function initImportantPage() {
 
             const data = await res.json();
             if (data?.success) {
-                showToast("Tugas penting ditambahkan", "success");
+                showToast("Berhasil ditambahkan", "success");
                 await reloadImportantList();
                 input.value = "";
-            } else showToast("Gagal menambahkan tugas", "error");
+            } else showToast("Gagal menambahkan", "error");
         } catch {
             showToast("Terjadi kesalahan koneksi", "error");
         }
     });
 
-    // === Toggle status selesai ===
     document.querySelectorAll(".toggle-important-task").forEach((checkbox) => {
         checkbox.addEventListener("change", async (e) => {
             const id = e.target.dataset.id;
@@ -47,7 +45,7 @@ export function initImportantPage() {
                 });
 
                 if (res.ok) {
-                    showToast("Status tugas diperbarui", "success");
+                    showToast("Status diperbarui", "success");
                     await reloadImportantList();
                 } else showToast("Gagal memperbarui status", "error");
             } catch {
@@ -56,7 +54,6 @@ export function initImportantPage() {
         });
     });
 
-    // === Hapus tugas penting (macOS confirm) ===
     document.querySelectorAll(".delete-important-task").forEach((btn) => {
         btn.addEventListener("click", async () => {
             const id = btn.dataset.id;
@@ -75,16 +72,15 @@ export function initImportantPage() {
                 });
 
                 if (res.ok) {
-                    showToast("Tugas berhasil dihapus", "success");
+                    showToast("Berhasil dihapus", "success");
                     await reloadImportantList();
-                } else showToast("Gagal menghapus tugas", "error");
+                } else showToast("Gagal menghapus", "error");
             } catch {
                 showToast("Koneksi gagal saat menghapus", "error");
             }
         });
     });
 
-    // === Reload daftar ===
     async function reloadImportantList() {
         try {
             const res = await fetch("/important", {
@@ -99,7 +95,7 @@ export function initImportantPage() {
             const contentEl = document.getElementById("content");
             if (contentEl) contentEl.innerHTML = newContent;
 
-            initImportantPage(); // re-init semua event baru
+            initImportantPage();
         } catch {
             showToast("Gagal memuat ulang daftar tugas", "error");
         }

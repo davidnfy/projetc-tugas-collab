@@ -40,7 +40,7 @@ class UserTodoCategoryController extends Controller
 
         return request()->ajax()
             ? response()->json($category)
-            : redirect()->back()->with('success', 'Kategori berhasil dibuat!');
+            : redirect()->back()->with('success', 'Berhasil dibuat!');
     }
 
     public function update(Request $request, $id)
@@ -54,7 +54,7 @@ class UserTodoCategoryController extends Controller
 
         return request()->ajax()
             ? response()->json($category)
-            : redirect()->back()->with('updated', 'Kategori berhasil diperbarui!');
+            : redirect()->back()->with('updated', 'Berhasil diperbarui!');
     }
 
     public function destroy($id)
@@ -63,7 +63,7 @@ class UserTodoCategoryController extends Controller
         $category->delete();
 
         return request()->ajax()
-            ? response()->json(['message' => 'Kategori dihapus.'])
-            : redirect()->back()->with('deleted', 'Kategori berhasil dihapus!');
+            ? response()->json(['message' => 'Berhasil dihapus.'])
+            : redirect()->back()->with('deleted', 'Berhasil dihapus!');
     }
 }

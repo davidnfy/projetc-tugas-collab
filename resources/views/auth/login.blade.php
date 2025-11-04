@@ -4,28 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Todo App</title>
-
-    {{-- Import Vite --}}
     @vite('resources/css/app.css')
-
-    {{-- Font Awesome --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
-
 <body class="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-100 to-gray-200">
-
     <div class="bg-white/90 backdrop-blur-md shadow-2xl rounded-2xl overflow-hidden w-[400px] p-10 border border-gray-200">
-
-        {{-- Title --}}
         <h2 class="text-3xl font-bold text-center text-gray-800 mb-8 border-b-4 border-gray-600 inline-block pb-1">
             Login
         </h2>
 
-        {{-- Form --}}
         <form action="{{ route('login') }}" method="POST" class="space-y-5">
             @csrf
 
-            {{-- Email --}}
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
                 <div class="flex items-center border border-gray-300 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-gray-500 bg-gray-50">
@@ -35,7 +25,6 @@
                 </div>
             </div>
 
-            {{-- Password --}}
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
                 <div class="flex items-center border border-gray-300 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-gray-500 bg-gray-50">
@@ -48,19 +37,16 @@
                 </a>
             </div>
 
-            {{-- Submit --}}
             <button type="submit"
                 class="w-full bg-gray-800 text-white font-semibold py-3 rounded-lg hover:bg-gray-700 transition">
                 Login
             </button>
 
-            {{-- OR divider --}}
             <div class="relative flex items-center justify-center mt-4">
                 <div class="w-full border-t border-gray-300"></div>
                 <span class="absolute bg-white px-3 text-gray-500 text-sm">or</span>
             </div>
 
-            {{-- Google Login --}}
             <a href="{{ url('/auth/google') }}"
                class="flex items-center justify-center gap-3 w-full mt-3 border border-gray-300 py-3 rounded-lg hover:bg-gray-100 transition">
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="Google logo">
@@ -68,7 +54,6 @@
             </a>
         </form>
 
-        {{-- Register link --}}
         <p class="text-sm text-gray-600 mt-6 text-center">
             Don’t have an account?
             <a href="{{ route('register') }}" class="text-gray-800 font-semibold hover:underline">

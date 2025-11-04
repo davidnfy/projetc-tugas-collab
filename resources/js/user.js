@@ -27,16 +27,15 @@ export function initUserTodoPage() {
             });
 
             if (res.ok) {
-                showToast("Tugas berhasil ditambahkan!", "success");
+                showToast("Berhasil ditambahkan!", "success");
                 await reloadUserTodoList();
                 addForm.reset();
-            } else showToast("Gagal menambah tugas!", "error");
+            } else showToast("Gagal menambah", "error");
         } catch {
             showToast("Terjadi kesalahan koneksi!", "error");
         }
     });
 
-    // === Toggle Status Todo ===
     document.querySelectorAll(".toggle-user-todo").forEach((btn) => {
         btn.addEventListener("click", async () => {
             const url = btn.dataset.url;
@@ -64,7 +63,6 @@ export function initUserTodoPage() {
         });
     });
 
-    // === Edit Inline Todo ===
     document.querySelectorAll(".edit-btn").forEach((btn) => {
         btn.addEventListener("click", (e) => {
             e.preventDefault();
@@ -110,7 +108,6 @@ export function initUserTodoPage() {
         });
     });
 
-    // === Hapus Todo ===
     document.querySelectorAll(".delete-user-todo").forEach((btn) => {
         btn.addEventListener("click", async (e) => {
             e.preventDefault();
@@ -139,7 +136,6 @@ export function initUserTodoPage() {
         });
     });
 
-    // === Reload Daftar Todo (AJAX) ===
     async function reloadUserTodoList() {
         const categoryId = document.querySelector("#addUserTodoForm")?.dataset.categoryId;
         if (!categoryId) return location.reload();
@@ -156,15 +152,13 @@ export function initUserTodoPage() {
             const contentEl = document.getElementById("mainContent");
             if (contentEl) contentEl.innerHTML = newContent;
 
-            initUserTodoPage(); // re-init listener
+            initUserTodoPage();
         } catch {
             showToast("Gagal memuat ulang daftar tugas", "error");
         }
     }
 }
 
-// === Helper Toast (optional) ===
 function showToast(message, type = "info") {
     console.log(`[${type.toUpperCase()}] ${message}`);
-    // Bisa kamu ganti pakai komponen toast Tailwind atau SweetAlert
 }

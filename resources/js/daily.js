@@ -10,16 +10,14 @@ export function initDailyPage() {
     const expandBtn = document.getElementById("expand-form");
     const saveBtn = document.getElementById("save-daily");
 
-    // === Expand form ===
     expandBtn?.addEventListener("click", () => {
         extraFields.classList.toggle("hidden");
     });
 
-    // === Tambah Tugas ===
     saveBtn?.addEventListener("click", async (e) => {
         e.preventDefault();
         const title = titleInput.value.trim();
-        if (!title) return showToast("Judul tugas wajib diisi!", "error");
+        if (!title) return showToast("Judul wajib diisi!", "error");
 
         try {
             const res = await fetch("/daily", {
@@ -38,7 +36,7 @@ export function initDailyPage() {
 
             const data = await res.json();
             if (data?.success) {
-                showToast("Tugas berhasil ditambahkan", "success");
+                showToast("Berhasil ditambahkan", "success");
                 await reloadDailyList();
                 form.reset();
                 extraFields.classList.add("hidden");
@@ -48,7 +46,6 @@ export function initDailyPage() {
         }
     });
 
-    // === Toggle status selesai ===
     document.querySelectorAll(".toggle-daily").forEach((checkbox) => {
         checkbox.addEventListener("change", async (e) => {
             const id = e.target.dataset.id;
@@ -65,7 +62,7 @@ export function initDailyPage() {
                 });
 
                 if (res.ok) {
-                    showToast("Status tugas diperbarui", "success");
+                    showToast("Status diperbarui", "success");
                     await reloadDailyList();
                 } else {
                     e.target.checked = !prev;
@@ -80,7 +77,6 @@ export function initDailyPage() {
         });
     });
 
-    // === Hapus Tugas (macOS Confirm Dialog) ===
     document.querySelectorAll(".delete-daily").forEach((btn) => {
         btn.addEventListener("click", async () => {
             const id = btn.dataset.id;
@@ -99,16 +95,15 @@ export function initDailyPage() {
                 });
 
                 if (res.ok) {
-                    showToast("Tugas berhasil dihapus", "success");
+                    showToast("Berhasil dihapus", "success");
                     await reloadDailyList();
-                } else showToast("Gagal menghapus tugas", "error");
+                } else showToast("Gagal menghapus", "error");
             } catch {
                 showToast("Koneksi gagal saat menghapus", "error");
             }
         });
     });
 
-    // === Edit Judul Inline ===
     document.querySelectorAll(".editable-title").forEach((el) => {
         el.addEventListener("blur", async () => {
             const id = el.dataset.id;
@@ -137,7 +132,6 @@ export function initDailyPage() {
         });
     });
 
-    // === Reload daftar === 
     async function reloadDailyList() {
         try {
             const res = await fetch("/daily", {
@@ -151,9 +145,9 @@ export function initDailyPage() {
             const contentEl = document.getElementById("content");
             if (contentEl) contentEl.innerHTML = newContent;
 
-            initDailyPage(); // Re-init semua listener
+            initDailyPage();
         } catch {
-            showToast("Gagal memuat ulang daftar tugas", "error");
+            showToast("Gagal memuat ulang daftar", "error");
         }
     }
 }

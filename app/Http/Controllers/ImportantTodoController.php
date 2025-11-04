@@ -24,7 +24,6 @@ class ImportantTodoController extends Controller
         ]);
     }
 
-    // ✅ CREATE
     public function store(Request $request)
     {
         $request->validate([
@@ -37,22 +36,18 @@ class ImportantTodoController extends Controller
             'is_completed' => false,
         ]);
 
-        // 🔔 SweetAlert notif
-        return redirect()->route('important.index')->with('success', 'Tugas penting berhasil ditambahkan!');
+        return redirect()->route('important.index')->with('success', 'Berhasil ditambahkan!');
     }
 
-    // ✅ TOGGLE (ubah status)
     public function toggle($id)
     {
         $todo = ImportantTodo::where('user_id', Auth::id())->findOrFail($id);
         $todo->is_completed = !$todo->is_completed;
         $todo->save();
 
-        // 🔔 SweetAlert notif
-        return redirect()->route('important.index')->with('updated', 'Status tugas penting diperbarui!');
+        return redirect()->route('important.index')->with('updated', 'Status diperbarui!');
     }
 
-    // ✅ UPDATE (ubah judul)
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -63,8 +58,7 @@ class ImportantTodoController extends Controller
         $todo->title = $request->title;
         $todo->save();
 
-        // 🔔 SweetAlert notif
-        return redirect()->route('important.index')->with('updated', 'Tugas berhasil diperbarui!');
+        return redirect()->route('important.index')->with('updated', 'Berhasil diperbarui!');
     }
 
     public function destroy($id)
@@ -72,6 +66,6 @@ class ImportantTodoController extends Controller
         $todo = ImportantTodo::where('user_id', Auth::id())->findOrFail($id);
         $todo->delete();
 
-        return redirect()->route('important.index')->with('deleted', 'Tugas berhasil dihapus!');
+        return redirect()->route('important.index')->with('deleted', 'Berhasil dihapus!');
     }
 }
