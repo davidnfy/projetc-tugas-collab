@@ -54,13 +54,55 @@ export function initImportantPage() {
         });
     });
 
+    document.querySelectorAll(".edit-btn").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+            e.preventDefault();
+            const parent = btn.closest("li");
+            const input = parent.querySelector("input[name='title']");
+            const span = parent.querySelector(".todo-title");
+            const saveBtn = parent.querySelector(".save-btn");
+
+            input.classList.toggle("hidden");
+            span.classList.toggle("hidden");
+            saveBtn.classList.toggle("hidden");
+            input.focus();
+        });
+    });
+
+    document.querySelectorAll(".save-btn").forEach((btn) => {
+        btn.addEventListener("click", async (e) => {
+            e.preventDefault();
+            const form = btn.closest("form");
+            const input = form.querySelector("input[name='title']");
+            const title = input.value.trim();
+
+            if (!title) return showToast("Judul tidak boleh kosong!", "error");
+
+            try {
+                const res = await fetch(form.action, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": csrfToken,
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                    body: new FormData(form),
+                });
+
+                if (res.ok) {
+                    showToast("Perubahan disimpan!", "success");
+                    await reloadImportantList();
+                } else showToast("Gagal menyimpan perubahan!", "error");
+            } catch {
+                showToast("Koneksi gagal saat update!", "error");
+            }
+        });
+    });
+
     document.querySelectorAll(".delete-important-task").forEach((btn) => {
-        btn.addEventListener("click", async () => {
+        btn.addEventListener("click", async (e) => {
+            e.preventDefault();
             const id = btn.dataset.id;
             if (!id) return;
-
-            const confirmed = await confirmDelete();
-            if (!confirmed) return;
 
             try {
                 const res = await fetch(`/important/${id}`, {

@@ -78,12 +78,10 @@ export function initDailyPage() {
     });
 
     document.querySelectorAll(".delete-daily").forEach((btn) => {
-        btn.addEventListener("click", async () => {
+        btn.addEventListener("click", async (e) => {
+            e.preventDefault();
             const id = btn.dataset.id;
             if (!id) return;
-
-            const confirmed = await confirmDelete();
-            if (!confirmed) return;
 
             try {
                 const res = await fetch(`/daily/${id}`, {
@@ -104,7 +102,51 @@ export function initDailyPage() {
         });
     });
 
-    document.querySelectorAll(".editable-title").forEach((el) => {
+    document.querySelectorAll(".edit-btn").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+            e.preventDefault();
+            const parent = btn.closest("li");
+            const input = parent.querySelector("input[name='title']");
+            const span = parent.querySelector(".todo-title");
+            const saveBtn = parent.querySelector(".save-btn");
+
+            input.classList.toggle("hidden");
+            span.classList.toggle("hidden");
+            saveBtn.classList.toggle("hidden");
+            input.focus();
+        });
+    });
+
+    document.querySelectorAll(".save-btn").forEach((btn) => {
+        btn.addEventListener("click", async (e) => {
+            e.preventDefault();
+            const form = btn.closest("form");
+            const input = form.querySelector("input[name='title']");
+            const title = input.value.trim();
+
+            if (!title) return showToast("Judul tidak boleh kosong", "error");
+
+            try {
+                const res = await fetch(form.action, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": csrfToken,
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                    body: new FormData(form),
+                });
+
+                if (res.ok) {
+                    showToast("Judul tersimpan", "success");
+                    await reloadDailyList();
+                } else showToast("Gagal menyimpan perubahan", "error");
+            } catch {
+                showToast("Error koneksi saat menyimpan", "error");
+            }
+        });
+    });
+
+    document.querySelectorAll(".todo-title").forEach((el) => {
         el.addEventListener("blur", async () => {
             const id = el.dataset.id;
             const title = el.innerText.trim();
@@ -124,13 +166,24 @@ export function initDailyPage() {
                     body: JSON.stringify({ title }),
                 });
 
-                if (res.ok) showToast("Judul tersimpan", "success");
-                else showToast("Gagal menyimpan perubahan", "error");
+                if (res.ok) {
+                    showToast("Judul tersimpan", "success");
+                    await reloadDailyList();
+                } else showToast("Gagal menyimpan perubahan", "error");
             } catch {
                 showToast("Error koneksi saat menyimpan", "error");
             }
         });
+
+        el.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                el.blur();
+            }
+        });
     });
+
+
 
     async function reloadDailyList() {
         try {

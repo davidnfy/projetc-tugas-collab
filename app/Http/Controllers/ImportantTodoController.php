@@ -66,6 +66,10 @@ class ImportantTodoController extends Controller
         $todo = ImportantTodo::where('user_id', Auth::id())->findOrFail($id);
         $todo->delete();
 
+        if (request()->ajax()) {
+            return response()->json(['success' => true]);
+        }
+
         return redirect()->route('important.index')->with('deleted', 'Berhasil dihapus!');
     }
 }
