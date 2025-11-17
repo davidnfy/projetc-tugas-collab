@@ -6,7 +6,7 @@
     <title>@yield('title', 'My App')</title>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
+    
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -16,8 +16,6 @@
     <link rel="stylesheet" href="{{ asset('css/forgot-password.css') }}">
     <link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
 
-    <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Inline style (khusus halaman auth) -->
     <style>
@@ -70,6 +68,9 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     @vite(['resources/js/app.js'])
 

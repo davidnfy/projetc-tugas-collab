@@ -1,7 +1,8 @@
 <div class="p-6">
     <h2 class="text-2xl font-semibold mb-4 text-gray-800">📁 {{ ucfirst($category->name) }}</h2>
 
-    <form action="{{ route('user.store') }}" method="POST" class="flex mb-4">
+    <form id="addUserTodoForm" data-category-id="{{ $category->id }}" action="{{ route('user.store') }}" method="POST" class="flex mb-4">
+
         @csrf
         <input type="hidden" name="category_id" value="{{ $category->id }}">
         <input
@@ -69,7 +70,7 @@
                             @method('DELETE')
                             <button
                                 type="submit"
-                                class="text-red-500 hover:text-red-600 transition btn-delete"
+                                class="text-red-500 hover:text-red-600 transition delete-btn"
                             >
                                 ❌
                             </button>
