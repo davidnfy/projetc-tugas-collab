@@ -1,5 +1,5 @@
 <div class="p-6">
-    <h2 class="text-2xl font-semibold mb-4 text-gray-800">Important Tasks</h2>
+    <h2 class="text-2xl font-semibold mb-4 text-gray-800">⭐ Important Tasks</h2>
 
     <form id="addImportantForm" action="{{ route('important.store') }}" method="POST" class="flex mb-4">
         @csrf
