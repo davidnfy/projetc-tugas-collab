@@ -110,5 +110,22 @@
             });
         </script>
     @endif
+
+    <script>
+        window.showToast = function(message, type = 'info') {
+            const icons = {
+                success: 'success',
+                error: 'error',
+                warning: 'warning',
+                info: 'info'
+            };
+            Swal.fire({
+                icon: icons[type] || 'info',
+                title: message,
+                timer: 2000,
+                showConfirmButton: false
+            });
+        };
+    </script>
 </body>
 </html>

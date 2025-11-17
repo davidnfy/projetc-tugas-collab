@@ -9,6 +9,11 @@
     </div>
 
     <nav class="flex-1 px-4 py-3 space-y-2" id="categoryList">
+        <a href="{{ route('dashboard') }}"
+            class="block w-full text-left px-3 py-2 rounded-md text-gray-700 hover:bg-blue-100 hover:text-blue-600 font-medium transition">
+            🏠 Dashboard
+        </a>
+
         <button id="btn-daily"
             class="block w-full text-left px-3 py-2 rounded-md text-gray-700 hover:bg-blue-100 hover:text-blue-600 font-medium transition">
             🗓️ Daily

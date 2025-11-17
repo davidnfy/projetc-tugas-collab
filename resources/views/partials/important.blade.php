@@ -51,7 +51,7 @@
                             <span class="todo-title {{ $todo->is_completed ? 'line-through text-gray-400' : 'text-gray-800' }}">
                                 {{ $todo->title }}
                             </span>
-                            <button type="submit" class="hidden text-green-500 hover:text-green-600">💾</button>
+                            <button class="hidden save-btn text-green-500 hover:text-green-600"></button>
                         </form>
                     </div>
 
@@ -66,10 +66,10 @@
                         <form action="{{ route('important.destroy', $todo->id) }}" method="POST">
                             @csrf
                             @method('DELETE')
-                            <button 
-                                type="submit" 
-                                class="text-red-500 hover:text-red-600 transition"
-                                onclick="return confirm('Delete this important task?')"
+                            <button
+                                type="submit"
+                                class="text-red-500 hover:text-red-600 transition delete-important-task"
+                                data-id="{{ $todo->id }}"
                             >
                                 ❌
                             </button>
@@ -81,19 +81,4 @@
     @endif
 </div>
 
-<script>
-document.querySelectorAll('.edit-btn').forEach(button => {
-    button.addEventListener('click', function() {
-        const parent = this.closest('li');
-        const input = parent.querySelector('input[name="title"]');
-        const title = parent.querySelector('.todo-title');
-        const saveBtn = parent.querySelector('button[type="submit"]');
 
-        input.classList.toggle('hidden');
-        title.classList.toggle('hidden');
-        saveBtn.classList.toggle('hidden');
-
-        input.focus();
-    });
-});
-</script>
